@@ -16,19 +16,19 @@ RandomListNode* doCopy(unordered_map<RandomListNode*, RandomListNode*>& map, Ran
 {
 	if (!ptr)
 		return NULL;
-	RandomListNode* copyedNode = NULL;
+	RandomListNode* copiedNode = NULL;
 	if (map.find(ptr) == map.end())
 	{
-		copyedNode = new RandomListNode(ptr->label);
-		map[ptr] = copyedNode;
+		copiedNode = new RandomListNode(ptr->label);
+		map[ptr] = copiedNode;
 	}
 	else
-		copyedNode = map[ptr];
+		return map[ptr];
 	if (ptr->next)
-		copyedNode->next = doCopy(map, ptr->next);
+		copiedNode->next = doCopy(map, ptr->next);
 	if (ptr->random)
-		copyedNode->random = doCopy(map, ptr->random);
-	return copyedNode;
+		copiedNode->random = doCopy(map, ptr->random);
+	return copiedNode;
 }
 RandomListNode *copyRandomList(RandomListNode *head)
 {
@@ -62,8 +62,46 @@ RandomListNode *copyRandomList(RandomListNode* head)
 		ptr = reserveNode[i];
 		if (ptr->random)
 			ptr->next->random = ptr->random->next;
-		if (i > 0)
-			reserveNode[i - 1]->next = reserveNode[i];
+	}
+	for (int i = 1; i < reserveNode.size(); i++)
+	{
+		ptr = reserveNode[i];
+		reseveNode[i - 1]->next = ptr;
+	}
+	if (ptr)
+		ptr->next = NULL:
+	return newHead;
+}
+//solution 3
+RandomListNode *copyRandomList(RandomListNode* head)
+{
+    RandomListNode *newHead = NULL;
+	RandomListNode *ptr = head;
+	while(ptr) // append the copied nodes to the original list
+	{
+		RandomListNode* copiedNode = new RandomListNode(ptr->label);
+		copiedNode->next = ptr->next;
+		ptr->next = copiedNode;
+		ptr = copiedNode->next;
+		if (!newHead)
+			newHead = copiedNode;
+	}
+	ptr = head;
+	while(ptr) // copy the random link
+	{
+		if (ptr->random)
+			ptr->next->random = ptr->random->next;
+		ptr = ptr->next->next;
+	}
+	ptr = head;
+	while(ptr)
+	{
+		RandomListNode* tmp = ptr->next->next;
+		if (tmp)
+			ptr->next->next = ptr->next->next->next;
+		ptr->next = tmp;
+		ptr = ptr->next;
 	}
 	return newHead;
 }
+
