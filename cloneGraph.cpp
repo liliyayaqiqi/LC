@@ -11,6 +11,7 @@ Nodes are labeled uniquely.
  *     UndirectedGraphNode(int x) : label(x) {};
  * };
  */
+ // DFS solution
 unordered_map<int, UndirectedGraphNode*> nodeMap;
 UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node)
 {
